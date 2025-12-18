@@ -1,0 +1,116 @@
+SHOW DATABASES;
+CREATE DATABASE Collegedb;
+USE Collegedb;
+SHOW TABLES;
+CREATE TABLE Course(C_code INT(1),C_credit INT(3),C_duration INT(2));
+DESC Course;
+ALTER TABLE Course ADD C_description VARCHAR(25);
+ALTER TABLE Course ADD PRIMARY KEY (C_code);
+ALTER TABLE Course MODIFY C_credit int NOT NULL;
+RENAME TABLE Course TO Courses;
+ALTER TABLE Courses ADD total_fee INT(10);
+
+--setting constraints name
+ALTER TABLE Courses ADD CONSTRAINT PK_Courses PRIMARY KEY (C_code);
+ALTER TABLE Courses ADD CONSTRAINT UC_Coursename UNIQUE(C_name);
+ALTER TABLE Courses ADD C_name VARCHAR(25);INSERT INTO Courses(C_code,C_credit,C_duration,C_description,total_fee,C_name) VALUES(101,3,1,"BCA is a TU related courses",500,"BCA");
+
+
+--does not work
+ALTER TABLE Courses RENAME Column total_fee TO C_fee;
+ALTER TABLE Courses CHANGE COLUMN `total_fee` `c_fee` INT(10);
+
+--create table with foreign key
+CREATE TABLE Students(roll_number INT(5) PRIMARY KEY,name VARCHAR(30) NOT NULL,email VARCHAR(25) UNIQUE,course_code INT(5) NOT NULL,FOREIGN KEY(course_code) REFERENCES Courses(C_code));
+
+CREATE TABLE Subjects(s_code INT(5) PRIMARY KEY,name VARCHAR(30),s_credit INT(3));
+ALTER TABLE Subjects ALTER s_credit SET DEFAULT 3;
+
+--create linked entity with compound key
+CREATE TABLE Course_Subjects(course_code INT(5),subject_code INT(5),PRIMARY KEY(course_code,subject_code),FOREIGN KEY(course_code) REFERENCES Courses(C_code),FOREIGN KEY(subject_code) REFERENCES Subjects(s_code));
+
+
+INSERT INTO Courses(C_code,C_credit,C_duration,C_description,total_fee,C_name) VALUES(101,3,1,"BCA is a TU related courses",500,"BCA");
+INSERT INTO Courses(C_code,C_credit,C_duration,C_description,total_fee,C_name) VALUES(102,4,5,"BBS is a TU related courses",10000,"BBS");
+INSERT INTO Courses(C_code,C_credit,C_duration,C_description,total_fee,C_name) VALUES(103,5,6,"BBM is a TU related courses",20000,"BBM");
+INSERT INTO Courses(C_code,C_credit,C_duration,C_description,total_fee,C_name) VALUES(104,7,3,"Bsc is a TU related courses",15000,"Bsc");
+INSERT INTO Courses(C_code,C_credit,C_duration,C_description,total_fee,C_name) VALUES(105,8,1,"BSW is a TU related courses",500,"BSW");
+
+INSERT INTO Students(roll_number,name,email,course_code) VALUES(12,"Hari","hari@gmail.com",101);
+INSERT INTO Students(roll_number,name,email,course_code) VALUES(13,"kari","kari@gmail.com",102);
+INSERT INTO Students(roll_number,name,email,course_code) VALUES(14,"siva","siva@gmail.com",103);
+INSERT INTO Students(roll_number,name,email,course_code) VALUES(15,"mia","mia@gmail.com",101);
+INSERT INTO Students(roll_number,name,email,course_code) VALUES(16,"rita","rita@gmail.com",105);
+INSERT INTO Students(roll_number,name,email,course_code) VALUES(17,"Nisha","nisha@gmail.com",103);
+INSERT INTO Students(roll_number,name,email,course_code) VALUES(18,"Sarita","sarita@gmail.com",104);
+INSERT INTO Students(roll_number,name,email,course_code) VALUES(19,"Kabita","kabita@gmail.com",102);
+
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(01,"microprocessor",18);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(02,"English",16);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(03,"account",19);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(04,"java",30);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(05,"scriptinglanguage",29);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(06,"numericalmethod",26);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(07,"dsa",21);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(08,"economics",31);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(09,"mathsI",34);
+INSERT INTO Subjects(s_code,name,s_credit) VALUES(10,"mathsII",35);
+
+INSERT INTO Course_Subjects(course_code,subject_code) VALUES(101,01);
+INSERT INTO Course_Subjects(course_code,subject_code) VALUES(102,03);
+INSERT INTO Course_Subjects(course_code,subject_code) VALUES(101,07);
+INSERT INTO Course_Subjects VALUES(103,02),(104,06),(105,05),(105,08),(103,09),(102,04),(102,10);
+
+UPDATE Course SET C_credit=3,C_fee=180000 WHERE C_code=101
+
+--data query language
+SELECT * FROM Course;
+
+SELECT C_code,C_name FROM Courses;
+--n(C_code,C_name)(Course)
+
+SELECT * FROM Courses WHERE C_code=102;
+--n *(sigma(c_code=2)(courses))
+
+SELECT * FROM Courses WHERE C_name="BCA";
+SELECT * FROM Courses WHERE total_fee=15000;
+SELECT * FROM Courses WHERE total_fee=15000 AND C_duration=3;
+SELECT * FROM Students WHERE name LIKE 'Nisha';
+SELECT * FROM Students WHERE ORDER BY name DESC;  SELECT * FROM Students ORDER BY name DESC;  SELECT * FROM Students WHERE course_code = 101 ORDER BY name DESC;
+
+SELECT COUNT(name)FROM Students;
+--c COUNT(name)(Students)
+SELECT AVG(total_fee)FROM Courses;
+SELECT MIN(total_fee)FROM Courses;
+SELECT MAX(total_fee)FROM Courses;
+SELECT * FROM Courses WHERE total_fee BETWEEN 10000 AND 20000;
+--cartesi
+SELECT DISTINCT roll_number FROM Students;
+SELECT DISTINCT roll_number,email FROM Students;
+SELECT *FROM Courses WHERE C_name= 'BCA' OR C_name = 'BBS';
+SELECT *FROM Courses WHERE  NOT C_name= 'BCA';
+SELECT TOP 3 * FROM Students;
+SELECT SUM(total_fee)FROM Courses;
+ joining 2 tables
+SELECT C_name,name FROM Courses, Students WHERE Courses.C_code=Students.course_code;
+SELECT C_name,name FROM Courses JOIN Students ON Courses.C_code=Students.course_code;
+--Relational Algebra
+--n(c_name,name)(sigma(courses=(Courses.c_code=students.courses_code)Students))
+
+--Joining 3 tables
+SELECT C_name,name FROM Courses,Subjects,Course_Subjects WHERE Courses.C_code=Course_Subjects.course_code AND Subjects.s_code=Course_Subjects.Subject_code;
+
+SELECT C_name,name FROM Courses JOIN Course_Subjects WHERE Courses.C_code=Course_Subjects.course_code JOIN Subjects ON Subjects.s_code=Course_Subjects.Subject_code;
+
+--joining 4 table
+SELECT name,C_name,s_name FROM Courses JOIN Course_Subjects ON Courses.C_code=Course_Subjects.course_code JOIN Subjects ON Subjects.subject_code=Course_Subjects.subject_code JOIN Subjects ON Courses.C_code=Students.course_code;
+
+-- joining 4 tables
+SELECT Students.name, Courses.C_name, Subjects.name AS subject_name
+FROM Courses
+JOIN Course_Subjects ON Courses.C_code = Course_Subjects.course_code
+JOIN Subjects ON Subjects.s_code = Course_Subjects.subject_code
+JOIN Students ON Courses.C_code = Students.course_code;
+
+--constraints details
+SELECT CONSTRAINT_NAME,CONSTRAINT_TYPE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME='Courses';

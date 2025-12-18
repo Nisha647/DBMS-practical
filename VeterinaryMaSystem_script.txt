@@ -1,0 +1,51 @@
+SHOW DATABASES;
+CREATE DATABASE VeterinaryManagementSystemdb;		
+USE VeterinaryManagementSystemdb;
+SHOW TABLES;
+CREATE TABLE Owner(c_ownerId INT(2),c_name VARCHAR(20),c_email VARCHAR(20),c_phoneNumber INT(10),c_address VARCHAR(15));
+DESC Owner;
+ALTER TABLE Owner ADD PRIMARY KEY (c_ownerId);
+ALTER TABLE Owner ADD UNIQUE KEY (c_email);
+ALTER TABLE Owner MODIFY c_ownerID int NOT NULL;
+
+
+SHOW TABLES;
+CREATE TABLE Vet(c_vetID INT(2),c_name VARCHAR(20),c_email VARCHAR(20),c_phoneNumber INT(10),c_address VARCHAR(15),c_registrationNo INT(7),c_date INT(2));
+DESC Vet;
+ALTER TABLE Vet ADD PRIMARY KEY (c_vetId);
+ALTER TABLE Vet ADD UNIQUE KEY (c_email);
+ALTER TABLE Vet MODIFY c_vetID int NOT NULL;
+
+CREATE TABLE Pets (petId INT(5) PRIMARY KEY,name VARCHAR(30) NOT NULL,color VARCHAR(15) NOT NULL,age INT(3),gender VARCHAR(10) NOT NULL,c_ownerId INT(2),FOREIGN KEY (c_ownerId) REFERENCES Owner(c_ownerId));
+
+
+CREATE TABLE Visit (visitId INT(5) PRIMARY KEY,visitingCard VARCHAR(30) NOT NULL,visitTime TIME NOT NULL,visitDate DATE NOT NULL,place VARCHAR(30) NOT NULL,petId INT(5),c_vetId INT(2),FOREIGN KEY (petId) REFERENCES Pets(petId),FOREIGN KEY (c_vetId) REFERENCES Vet(c_vetId));
+
+CREATE TABLE Prescriptions (prescriptionId INT(5) PRIMARY KEY,instruction VARCHAR(100) NOT NULL,quantity INT(5) NOT NULL,expiryDate DATE,dosage VARCHAR(30) NOT NULL,visitId INT(5),FOREIGN KEY (visitId) REFERENCES Visit(visitId));
+
+INSERT INTO Owner VALUES(1,'Ram Shrestha','ram@gmail.com','9811111111','Kathmandu'),(2,'SitaLama','sita@gmail.com','9822222222','Pokhara');
+INSERT INTO Owner VALUES(3,'Hari gurung','hari@gmail.com','9833333333','Lalitpur'),(4,'Gita KC','gita@gmail.com','9844444444','Butwal');
+INSERT INTO Owner VALUES(5,'Krishna Poudel','krishna@gmail.com','9865555555','Bhaktapur'),(6,'Mina Shrestha','mina@gmail.com','9866666666','Dharan');
+INSERT INTO Owner VALUES(7,'Raju Thapa','raju@gmail.com','9867777777','Chitwan'),(8,'Laxmi Koirala','laxmi@gmail.com','9868888888','Biratnagar');
+
+INSERT INTO Vet VALUES(1,'Dr. Manish Gautam','manish@vet.com','9851111111','Kathmandu','REG1001','2025-01-05'),
+(2,'Dr. Alisha Rai','alisha@vet.com','9852222222','Pokhara','REG1002','2025-02-10'),
+(3,'Dr. Kiran Shahi','kiran@vet.com','9853333333','Lalitpur','REG1003','2025-03-12');
+INSERT INTO Vet VALUES(4,'Dr. Suresh Karki','suresh@vet.com','9854444444','Chitwan','REG1004','2025-04-15'),
+(5,'Dr. Pooja Adhikari','pooja@vet.com','9855555555','Biratnagar','REG1005','2025-05-12');
+
+INSERT INTO Pets VALUES(101,'Tommy','Brown',3,'Male',1),(102,'Kitty','White',2,'Female',2),(103,'Rocky','Black',4,'Male',3),(104,'Bella','Golden',1,'Female',4);
+INSERT INTO Pets VALUES(105,'Bruno','Grey',5,'Male',5),(106,'Mimi','Black & White',3,'Female',6),(107,'Tiger','Brown',2,'Male',7),(108,'Lucy','White',1,'Female',8),
+(109,'Oscar','Golden',4,'Male',2),(110,'Daisy','Black',6,'Female',3);
+
+INSERT INTO Visit VALUES(201,'VC101','10:30:00','2025-08-01','Clinic Kathmandu',101,1),(202,'VC102','11:15:00','2025-08-02','Clinic Pokhara',102,2),
+(203,'VC103','09:45:00','2025-08-03','Clinic Lalitpur',103,3),(204,'VC104','14:00:00','2025-08-04','Clinic Butwal',104,1);
+INSERT INTO Visit VALUES(205,'VC105','15:30:00','2025-08-05','Clinic Bhaktapur',105,4),(206,'VC106','10:15:00','2025-08-06','Clinic Dharan',106,5),
+(207,'VC107','12:45:00','2025-08-07','Clinic Chitwan',107,4),(208,'VC108','09:30:00','2025-08-08','Clinic Biratnagar',108,5),
+(209,'VC109','11:00:00','2025-08-09','Clinic Pokhara',109,2),(210,'VC110','13:00:00','2025-08-10','Clinic Lalitpur',110,3);
+
+INSERT INTO Prescriptions VALUES(301,'Give antibiotics twice daily',10,'2025-09-01','2 tablets',201),(302,'Apply ointment once daily',1,'2025-08-20','Topical',202),
+(303,'Vitamin supplements for 2 weeks',14,'2025-09-15','1 capsule',203),(304,'Deworming medicine after food',5,'2025-09-10','1 tablet',204);
+INSERT INTO Prescriptions VALUES(305,'Pain relief medicine twice daily',7,'2025-09-20','1 tablet',205),(306,'Ear drops once daily',1,'2025-09-05','Topical',206),
+(307,'Antibiotics course for 5 days',5,'2025-09-15','1 capsule',207),(308,'Vaccination booster dose',1,'2025-08-30','Injection',208),
+(309,'Skin ointment for allergy',2,'2025-09-25','Apply twice daily',209),(310,'Calcium supplements for bones',10,'2025-10-01','1 tablet',210);

@@ -1,0 +1,38 @@
+SHOW DATABASES;
+CREATE DATABASE doctorappointdb;
+USEdoctorappointdb;
+SHOW TABLES;
+CREATE TABLE Patient(C_patientId INT(2),C_name VARCHAR(20),C_address VARCHAR(25),C_DOB INT(3),C_gender VARCHAR(10));
+DESC Patient;
+ALTER TABLE Patient ADD C_number VARCHAR(10);
+ALTER TABLE Patient ADD PRIMARY KEY (C_patientID);
+ALTER TABLE Patient MODIFY C_patientID int NOT NULL;
+RENAME TABLE Patient TO Patients;
+
+SHOW TABLES;
+CREATE TABLE Department(C_departmentId INT(2) NOT NULL,C_name VARCHAR(20),C_description VARCHAR(100),PRIMARY KEY(C_departmentId));
+DESC Department;
+ALTER TABLE Department MODIFY C_departmentID int NOT NULL;
+
+CREATE TABLE Doctors (doctorId INT(5) PRIMARY KEY,name VARCHAR(30) NOT NULL,contactNo VARCHAR(15) NOT NULL,email VARCHAR(50) UNIQUE,specialization VARCHAR(30) NOT NULL,C_departmentId INT(2),FOREIGN KEY (C_departmentId) REFERENCES Department(C_departmentId));
+
+
+CREATE TABLE Appointments (appointmentId INT(5) PRIMARY KEY,name VARCHAR(20) NOT NULL,patientId INT(2) NOT NULL,doctorId INT(5) NOT NULL,appointmentDate DATE NOT NULL,appointmentTime TIME NOT NULL,FOREIGN KEY (patientId) REFERENCES Patients(C_patientId),FOREIGN KEY (doctorId) REFERENCES Doctors(doctorId));
+
+SHOW TABLES;
+
+INSERT INTO Patients(C_patientId,C_name,C_address,C_DOB,C_gender,C_number) VALUES(0012,"ram","ktm",2005,"male",9761829311);
+INSERT INTO Patients(C_patientId,C_name,C_address,C_DOB,C_gender,C_number) VALUES(0013,"riya","sks",2006,"female",9766829413);
+INSERT INTO Patients(C_patientId,C_name,C_address,C_DOB,C_gender,C_number) VALUES(0014,"siya","pkr",2003,"female",9761859311);
+INSERT INTO Patients(C_patientId,C_name,C_address,C_DOB,C_gender,C_number) VALUES(0015,"shayam","bkt",2004,"male",9761829310);
+INSERT INTO Patients(C_patientId,C_name,C_address,C_DOB,C_gender,C_number) VALUES(0016,"hari","lalitpur",2005,"male",9761829001);
+
+INSERT INTO Department(C_departmentId,C_name,C_description) VALUES(1001,"Norbic hospital","Norbic hospital is popular hospital in city");
+INSERT INTO Department VALUES(1002,"Civil hospital","Civil hospital is top hospital of city"),(1003,"OM hospital","Om hospital is top hospital of city"),(1004,"Nepal medical","Nepal medical is good hospital"),(1005,"ABC","ABC hospital is top hospital in city");
+
+INSERT INTO Doctors VALUES(1,"Dr.Sita","9783467879","sita@gmail.com","Neurology",1001),(2,"Dr.Rita","9783867879","rita@gmail.com","Gynology",1002),(3,"Dr.Sarita","9883467879","sarita@gmail.com","Psycology",1003),(4,"Dr.Kabiita","9784467879","Kabita@gmail.com","Dental",1004),(5,"Dr.ramita","9785467879","ramita@gmail.com","Neurology",1005);
+
+INSERT INTO Appointments VALUES(501,"ram",0012,1,"2025-09-05","10:30:00");
+INSERT INTO Appointments VALUES(502,"riya",0013,2,"2025-09-06","11:00:00");
+INSERT INTO Appointments VALUES(503,"siya",0014,3,"2025-09-05","10:40:00");
+INSERT INTO Appointments VALUES(504,"shayam",0015,4,"2025-09-06","11:20:00"),(505,"hari",0016,4,"2024-09-06","10:50:00");
